@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projects Linktree</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Orbitron', sans-serif;
+}
+
+/* 🎮 Dark Background */
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center; /* center vertically */
+  background: #0f0c29;
+  overflow: hidden;
+  position: relative;
+  cursor: crosshair;
+}
+
+/* Canvas for grid + particles */
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+
+/* ✨ Neon Glass Container */
+.container {
+  position: relative;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  padding: 30px;
+  border-radius: 20px;
+  background: rgba(0,0,0,0.6);
+  box-shadow: 0 0 20px #00ffff, 0 0 60px #ff00ff;
+  backdrop-filter: blur(5px);
+  z-index: 10;
+}
+
+/* Profile Name & Subtitle (no image) */
+.profile h2 {
+  font-size: 26px;
+  color: #00ffff;
+  text-shadow: 0 0 10px #00ffff, 0 0 20px #ff00ff;
+  margin-bottom: 5px;
+}
+
+.profile p {
+  font-size: 14px;
+  color: #fff;
+  opacity: 0.8;
+  margin-bottom: 20px;
+}
+
+/* 🔗 Neon Buttons (no flicker) */
+.links a {
+  display: block;
+  text-decoration: none;
+  color: #00ffff;
+  font-weight: 700;
+  padding: 14px;
+  margin: 12px 0;
+  border-radius: 14px;
+  border: 2px solid #00ffff;
+  background: rgba(0,0,0,0.2);
+  text-shadow: 0 0 6px #00ffff, 0 0 12px #ff00ff;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 8px #00ffff;
+}
+
+.links a:hover {
+  background: #00ffff;
+  color: #000;
+  box-shadow: 0 0 20px #00ffff, 0 0 40px #ff00ff, 0 0 60px #00ffff;
+  transform: scale(1.08);
+}
+
+/* Footer */
+footer {
+  margin-top: 20px;
+  font-size: 12px;
+  color: #888;
+  z-index: 10;
+  position: relative;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="canvas"></canvas>
+
+<div class="container">
+  <div class="profile">
+    <h2>Irfan's</h2>
+    <p>🌐 Web & Game Projects</p>
+  </div>
+
+  <div class="links">
+   <a href="https://crelgios.github.io/Everywear/">🌐Clothing Website</a>
+    <a href="https://crelgios.github.io/3DWeb1/attached_assets/index_1752929390222.html">🌐3d Website</a>
+    <a href="https://crelgios.github.io/tasbii/">🌐Tasbi App</a>
+    <a href="https://crelgios.github.io/Games/">🎮Game Project</a>
+  </div>
+
+  <footer>© all copyright reserved</footer>
+</div>
+
+<script>
+// Canvas setup
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+// Grid
+let gridSize = 50;
+let offset = 0;
+
+// Particle trail
+const particles = [];
+const maxParticles = 100;
+
+class Particle {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.size = Math.random() * 4 + 2;
+    this.alpha = 1;
+    this.speedX = (Math.random()-0.5)*2;
+    this.speedY = (Math.random()-0.5)*2;
+    this.color = `hsl(${Math.random()*360}, 100%, 50%)`;
+  }
+  update() {
+    this.x += this.speedX;
+    this.y += this.speedY;
+    this.alpha -= 0.02;
+  }
+  draw() {
+    ctx.globalAlpha = this.alpha;
+    ctx.fillStyle = this.color;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
+    ctx.fill();
+    ctx.globalAlpha = 1;
+  }
+}
+
+const mouse = {x: canvas.width/2, y: canvas.height/2};
+window.addEventListener('mousemove', e => {
+  mouse.x = e.clientX;
+  mouse.y = e.clientY;
+  particles.push(new Particle(mouse.x, mouse.y));
+  if(particles.length > maxParticles) particles.shift();
+});
+
+function drawGrid() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.strokeStyle = 'rgba(0,255,255,0.2)';
+  ctx.lineWidth = 1;
+
+  for(let x=-gridSize+offset%gridSize;x<canvas.width;x+=gridSize){
+    ctx.beginPath();
+    ctx.moveTo(x,0);
+    ctx.lineTo(x,canvas.height);
+    ctx.stroke();
+  }
+
+  for(let y=-gridSize+offset%gridSize;y<canvas.height;y+=gridSize){
+    ctx.beginPath();
+    ctx.moveTo(0,y);
+    ctx.lineTo(canvas.width,y);
+    ctx.stroke();
+  }
+
+  offset += 1;
+}
+
+function animate() {
+  drawGrid();
+  particles.forEach((p,i)=>{
+    p.update();
+    p.draw();
+    if(p.alpha<=0) particles.splice(i,1);
+  });
+  requestAnimationFrame(animate);
+}
+
+animate();
+
+window.addEventListener('resize', () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
+</script>
+
+</body>
+</html>
