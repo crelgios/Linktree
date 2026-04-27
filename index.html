@@ -1,211 +1,386 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Projects Linktree</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Irfan's Projects</title>
 
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;800&display=swap');
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Orbitron', sans-serif;
-}
+    :root {
+      --cyan: #00ffff;
+      --pink: #ff00ff;
+      --green: #39ff14;
+      --dark: #070718;
+      --card: rgba(5, 8, 24, 0.72);
+      --white: #ffffff;
+    }
 
-/* 🎮 Dark Background */
-body {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center; /* center vertically */
-  background: #0f0c29;
-  overflow: hidden;
-  position: relative;
-  cursor: crosshair;
-}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-/* Canvas for grid + particles */
-canvas {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 0;
-}
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      overflow-x: hidden;
+      font-family: 'Orbitron', Arial, sans-serif;
+      background: #050510;
+      color: var(--white);
+    }
 
-/* ✨ Neon Glass Container */
-.container {
-  position: relative;
-  width: 90%;
-  max-width: 400px;
-  text-align: center;
-  padding: 30px;
-  border-radius: 20px;
-  background: rgba(0,0,0,0.6);
-  box-shadow: 0 0 20px #00ffff, 0 0 60px #ff00ff;
-  backdrop-filter: blur(5px);
-  z-index: 10;
-}
+    body {
+      min-height: 100dvh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      position: relative;
+      cursor: default;
+      background:
+        radial-gradient(circle at top, rgba(0, 255, 255, 0.16), transparent 35%),
+        radial-gradient(circle at bottom, rgba(255, 0, 255, 0.16), transparent 35%),
+        linear-gradient(135deg, #050510, #0f0c29 50%, #050510);
+    }
 
-/* Profile Name & Subtitle (no image) */
-.profile h2 {
-  font-size: 26px;
-  color: #00ffff;
-  text-shadow: 0 0 10px #00ffff, 0 0 20px #ff00ff;
-  margin-bottom: 5px;
-}
+    canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
 
-.profile p {
-  font-size: 14px;
-  color: #fff;
-  opacity: 0.8;
-  margin-bottom: 20px;
-}
+    .scanline {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.035),
+        rgba(255, 255, 255, 0.035) 1px,
+        transparent 1px,
+        transparent 5px
+      );
+      opacity: 0.35;
+    }
 
-/* 🔗 Neon Buttons (no flicker) */
-.links a {
-  display: block;
-  text-decoration: none;
-  color: #00ffff;
-  font-weight: 700;
-  padding: 14px;
-  margin: 12px 0;
-  border-radius: 14px;
-  border: 2px solid #00ffff;
-  background: rgba(0,0,0,0.2);
-  text-shadow: 0 0 6px #00ffff, 0 0 12px #ff00ff;
-  transition: all 0.2s ease;
-  box-shadow: 0 0 8px #00ffff;
-}
+    .container {
+      position: relative;
+      z-index: 2;
+      width: min(100%, 430px);
+      text-align: center;
+      padding: 28px 22px 22px;
+      border-radius: 24px;
+      background: var(--card);
+      border: 1px solid rgba(0, 255, 255, 0.35);
+      box-shadow:
+        0 0 22px rgba(0, 255, 255, 0.45),
+        0 0 60px rgba(255, 0, 255, 0.24),
+        inset 0 0 24px rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(12px);
+      animation: cardFloat 4s ease-in-out infinite;
+    }
 
-.links a:hover {
-  background: #00ffff;
-  color: #000;
-  box-shadow: 0 0 20px #00ffff, 0 0 40px #ff00ff, 0 0 60px #00ffff;
-  transform: scale(1.08);
-}
+    @keyframes cardFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
 
-/* Footer */
-footer {
-  margin-top: 20px;
-  font-size: 12px;
-  color: #888;
-  z-index: 10;
-  position: relative;
-}
-</style>
+    .badge {
+      display: inline-block;
+      margin-bottom: 14px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      color: var(--green);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      border: 1px solid rgba(57, 255, 20, 0.45);
+      background: rgba(57, 255, 20, 0.08);
+      box-shadow: 0 0 14px rgba(57, 255, 20, 0.35);
+    }
+
+    .profile h1 {
+      font-size: clamp(24px, 7vw, 34px);
+      line-height: 1.15;
+      color: var(--cyan);
+      text-shadow:
+        0 0 10px rgba(0, 255, 255, 0.9),
+        0 0 24px rgba(255, 0, 255, 0.6);
+      margin-bottom: 8px;
+      overflow-wrap: anywhere;
+    }
+
+    .profile p {
+      font-size: clamp(12px, 3.5vw, 15px);
+      color: rgba(255, 255, 255, 0.82);
+      line-height: 1.6;
+      margin-bottom: 22px;
+    }
+
+    .links {
+      display: flex;
+      flex-direction: column;
+      gap: 13px;
+    }
+
+    .links a {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 54px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1.5px solid rgba(0, 255, 255, 0.7);
+      background: linear-gradient(135deg, rgba(0, 255, 255, 0.08), rgba(255, 0, 255, 0.08));
+      color: var(--cyan);
+      text-decoration: none;
+      font-size: clamp(13px, 3.5vw, 15px);
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      line-height: 1.35;
+      text-shadow: 0 0 8px rgba(0, 255, 255, 0.8);
+      box-shadow: 0 0 12px rgba(0, 255, 255, 0.28);
+      transition: transform 0.18s ease, background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+      overflow: hidden;
+    }
+
+    .links a::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -120%;
+      width: 70%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+      transform: skewX(-20deg);
+      transition: left 0.5s ease;
+    }
+
+    .links a:hover::before,
+    .links a:active::before {
+      left: 130%;
+    }
+
+    .links a:hover,
+    .links a:active {
+      transform: translateY(-2px) scale(1.02);
+      background: var(--cyan);
+      color: #02020a;
+      box-shadow:
+        0 0 18px rgba(0, 255, 255, 0.9),
+        0 0 36px rgba(255, 0, 255, 0.55);
+      text-shadow: none;
+    }
+
+    footer {
+      margin-top: 22px;
+      font-size: clamp(10px, 3vw, 12px);
+      color: rgba(255, 255, 255, 0.55);
+      line-height: 1.5;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        align-items: center;
+        padding: 16px;
+      }
+
+      .container {
+        padding: 24px 16px 18px;
+        border-radius: 20px;
+        animation: none;
+      }
+
+      .links a {
+        min-height: 52px;
+        padding: 13px 12px;
+      }
+    }
+
+    @media (max-height: 620px) {
+      body {
+        align-items: flex-start;
+        padding-top: 18px;
+        padding-bottom: 18px;
+        overflow-y: auto;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .container,
+      .links a,
+      .links a::before {
+        animation: none;
+        transition: none;
+      }
+    }
+  </style>
 </head>
 
 <body>
+  <canvas id="canvas"></canvas>
+  <div class="scanline"></div>
 
-<canvas id="canvas"></canvas>
+  <main class="container">
+    <div class="badge">PROJECT HUB</div>
 
-<div class="container">
-  <div class="profile">
-    <h2>Irfan's</h2>
-    <p>🌐 Web & Game Projects</p>
-  </div>
+    <section class="profile" aria-label="Profile">
+      <h1>Irfan's Projects</h1>
+      <p>🌐 Web & Game Projects</p>
+    </section>
 
-  <div class="links">
-   <a href="https://crelgios.github.io/Everywear/">🌐Clothing Website</a>
-    <a href="https://crelgios.github.io/3DWeb1/attached_assets/index_1752929390222.html">🌐3d Website</a>
-    <a href="https://crelgios.github.io/tasbii/">🌐Tasbi App</a>
-    <a href="https://crelgios.github.io/Games/">🎮Game Project</a>
-  </div>
+    <nav class="links" aria-label="Project links">
+      <a href="https://crelgios.github.io/Everywear/">🌐 Clothing Website</a>
+      <a href="https://crelgios.github.io/3DWeb1/attached_assets/index_1752929390222.html">🧊 3D Website</a>
+      <a href="https://crelgios.github.io/tasbii/">📿 Tasbih App</a>
+      <a href="https://crelgios.github.io/Games/">🎮 Game Project</a>
+    </nav>
 
-  <footer>© all copyright reserved</footer>
-</div>
+    <footer>© All rights reserved</footer>
+  </main>
 
-<script>
-// Canvas setup
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+    let width = 0;
+    let height = 0;
+    let gridSize = 52;
+    let offset = 0;
+    const particles = [];
+    const stars = [];
+    const maxParticles = window.innerWidth < 600 ? 45 : 90;
 
-// Grid
-let gridSize = 50;
-let offset = 0;
+    function resizeCanvas() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-// Particle trail
-const particles = [];
-const maxParticles = 100;
+      stars.length = 0;
+      const count = width < 600 ? 55 : 95;
+      for (let i = 0; i < count; i++) {
+        stars.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          r: Math.random() * 1.8 + 0.4,
+          s: Math.random() * 0.35 + 0.08,
+          a: Math.random() * 0.7 + 0.25
+        });
+      }
+    }
 
-class Particle {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-    this.size = Math.random() * 4 + 2;
-    this.alpha = 1;
-    this.speedX = (Math.random()-0.5)*2;
-    this.speedY = (Math.random()-0.5)*2;
-    this.color = `hsl(${Math.random()*360}, 100%, 50%)`;
-  }
-  update() {
-    this.x += this.speedX;
-    this.y += this.speedY;
-    this.alpha -= 0.02;
-  }
-  draw() {
-    ctx.globalAlpha = this.alpha;
-    ctx.fillStyle = this.color;
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
-    ctx.fill();
-    ctx.globalAlpha = 1;
-  }
-}
+    class Particle {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.size = Math.random() * 3 + 1.8;
+        this.alpha = 1;
+        this.speedX = (Math.random() - 0.5) * 2.2;
+        this.speedY = (Math.random() - 0.5) * 2.2;
+        this.hue = Math.random() * 360;
+      }
 
-const mouse = {x: canvas.width/2, y: canvas.height/2};
-window.addEventListener('mousemove', e => {
-  mouse.x = e.clientX;
-  mouse.y = e.clientY;
-  particles.push(new Particle(mouse.x, mouse.y));
-  if(particles.length > maxParticles) particles.shift();
-});
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        this.alpha -= 0.022;
+      }
 
-function drawGrid() {
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.strokeStyle = 'rgba(0,255,255,0.2)';
-  ctx.lineWidth = 1;
+      draw() {
+        ctx.globalAlpha = Math.max(this.alpha, 0);
+        ctx.fillStyle = `hsl(${this.hue}, 100%, 60%)`;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+      }
+    }
 
-  for(let x=-gridSize+offset%gridSize;x<canvas.width;x+=gridSize){
-    ctx.beginPath();
-    ctx.moveTo(x,0);
-    ctx.lineTo(x,canvas.height);
-    ctx.stroke();
-  }
+    function addParticles(x, y, amount = 2) {
+      for (let i = 0; i < amount; i++) particles.push(new Particle(x, y));
+      while (particles.length > maxParticles) particles.shift();
+    }
 
-  for(let y=-gridSize+offset%gridSize;y<canvas.height;y+=gridSize){
-    ctx.beginPath();
-    ctx.moveTo(0,y);
-    ctx.lineTo(canvas.width,y);
-    ctx.stroke();
-  }
+    window.addEventListener('mousemove', (e) => addParticles(e.clientX, e.clientY, 2), { passive: true });
+    window.addEventListener('touchmove', (e) => {
+      const t = e.touches[0];
+      if (t) addParticles(t.clientX, t.clientY, 3);
+    }, { passive: true });
 
-  offset += 1;
-}
+    function drawBackground() {
+      ctx.clearRect(0, 0, width, height);
 
-function animate() {
-  drawGrid();
-  particles.forEach((p,i)=>{
-    p.update();
-    p.draw();
-    if(p.alpha<=0) particles.splice(i,1);
-  });
-  requestAnimationFrame(animate);
-}
+      const gradient = ctx.createLinearGradient(0, 0, width, height);
+      gradient.addColorStop(0, '#050510');
+      gradient.addColorStop(0.5, '#111133');
+      gradient.addColorStop(1, '#050510');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, width, height);
 
-animate();
+      stars.forEach((star) => {
+        star.y += star.s;
+        if (star.y > height) {
+          star.y = 0;
+          star.x = Math.random() * width;
+        }
+        ctx.globalAlpha = star.a;
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      ctx.globalAlpha = 1;
 
-window.addEventListener('resize', () => {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-});
-</script>
+      ctx.strokeStyle = 'rgba(0, 255, 255, 0.16)';
+      ctx.lineWidth = 1;
 
+      for (let x = -gridSize + (offset % gridSize); x < width; x += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+        ctx.stroke();
+      }
+
+      for (let y = -gridSize + (offset % gridSize); y < height; y += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
+      }
+
+      offset += 0.6;
+    }
+
+    function animate() {
+      drawBackground();
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        particles[i].update();
+        particles[i].draw();
+        if (particles[i].alpha <= 0) particles.splice(i, 1);
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    resizeCanvas();
+    animate();
+    window.addEventListener('resize', resizeCanvas);
+  </script>
 </body>
 </html>
